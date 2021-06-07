@@ -2,6 +2,37 @@
 
 ## Opérateurs usuels
 
+### `+`, `-`, `*`, `/`, `%`
+
+- `%` dit aussi _modulo_ retourne le reste d'une division.
+  ```sql
+  SELECT 8 % 3;
+  +-------+
+  | 8 % 3 |
+  +-------+
+  |     2 |
+  +-------+
+  ```
+
+### `UCASE()`, `LCASE()`
+
+```sql
+SELECT UCASE('Prénom');
+
++------------------+
+| UCASE('Prénom')  |
++------------------+
+| PRÉNOM           |
++------------------+
+```
+
+### `CONCAT_WS()`
+
+```sql
+SELECT CONCAT_WS(", ", Address, PostalCode, City) AS Address
+FROM Customers;
+```
+
 ### Valeur `NULL`
 
 Une colonne qui n'est pas renseignée, et donc vide, est dite contenir la valeur `NULL`. Cette valeur n'est pas zéro, c'est une absence de valeur.
@@ -459,7 +490,13 @@ Cette requête sélectionne le champ “ma_colonne” de la table “nom_du_tabl
 
 ### `MIN()` `MAX()` `AVG()`
 
-### `CONCAT_WS()`
+### `GROUP_CONCAT()`
+
+```sql
+SELECT id, GROUP_CONCAT( nom_colonne SEPARATOR ', ' )
+FROM table
+GROUP BY id
+```
 
 ### Opérateur `CASE`
 
