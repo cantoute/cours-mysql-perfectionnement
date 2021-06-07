@@ -2,6 +2,46 @@
 
 ## Opérateurs usuels
 
+### Valeur `NULL`
+
+Une colonne qui n'est pas renseignée, et donc vide, est dite contenir la valeur `NULL`. Cette valeur n'est pas zéro, c'est une absence de valeur.
+
+Toute expression dont au moins un des termes a la valeur NULL donne comme résultat la valeur `NULL`.
+
+Une exception à cette règle est la fonction `COALESCE`. `COALESCE` (expr1, expr2,...) renvoie la première valeur qui n'est pas null parmi les valeurs des expressions expr1, expr2,...
+
+`COALESCE` permet de remplacer la valeur null par une autre valeur.
+
+**Remarque importante :** les valeurs `NULL` ne sont pas inclues dans les indexes (d'autant plus intéressant dans le cas des indexes uniques).
+
+### SQL `IS NULL` / `IS NOT NULL`
+
+Dans le langage SQL, l’opérateur IS permet de filtrer les résultats qui contiennent la valeur NULL. Cet opérateur est indispensable car la valeur NULL est une valeur inconnue et ne peut par conséquent pas être filtrée par les opérateurs de comparaison (cf. égal, inférieur, supérieur ou différent).
+
+Syntaxe
+Pour filtrer les résultats où les champs d’une colonne sont à NULL il convient d’utiliser la syntaxe suivante:
+
+```sql
+SELECT *
+FROM `table`
+WHERE nom_colonne IS NULL
+```
+
+A l’inverse, pour filtrer les résultats et obtenir uniquement les enregistrements qui ne sont pas null, il convient d’utiliser la syntaxe suivante:
+
+```sql
+SELECT *
+FROM `table`
+WHERE nom_colonne IS NOT NULL;
+
+-- strictement équivalent à :
+SELECT *
+FROM `table`
+WHERE NOT nom_colonne IS NULL;
+```
+
+_A savoir :_ l’opérateur IS retourne en réalité un booléen, c’est à dire une valeur `TRUE` si la condition est vrai ou `FALSE` si la condition n’est pas respectée. Cet opérateur est souvent utilisé avec la condition WHERE mais peut aussi trouvé son utilité lorsqu’une sous-requête est utilisée.
+
 ### SQL `LIKE`
 
 L’opérateur LIKE est utilisé dans la clause WHERE des requêtes SQL. Ce mot-clé permet d’effectuer une recherche sur un modèle particulier. Il est par exemple possible de rechercher les enregistrements dont la valeur d’une colonne commence par telle ou telle lettre. Les modèles de recherches sont multiple.
@@ -50,46 +90,6 @@ SELECT *
 FROM table
 WHERE nom_colonne BETWEEN 'valeur1' AND 'valeur2'
 ```
-
-### SQL `IS NULL` / `IS NOT NULL`
-
-Dans le langage SQL, l’opérateur IS permet de filtrer les résultats qui contiennent la valeur NULL. Cet opérateur est indispensable car la valeur NULL est une valeur inconnue et ne peut par conséquent pas être filtrée par les opérateurs de comparaison (cf. égal, inférieur, supérieur ou différent).
-
-Syntaxe
-Pour filtrer les résultats où les champs d’une colonne sont à NULL il convient d’utiliser la syntaxe suivante:
-
-```sql
-SELECT *
-FROM `table`
-WHERE nom_colonne IS NULL
-```
-
-A l’inverse, pour filtrer les résultats et obtenir uniquement les enregistrements qui ne sont pas null, il convient d’utiliser la syntaxe suivante:
-
-```sql
-SELECT *
-FROM `table`
-WHERE nom_colonne IS NOT NULL;
-
--- strictement équivalent à :
-SELECT *
-FROM `table`
-WHERE NOT nom_colonne IS NULL;
-```
-
-_A savoir :_ l’opérateur IS retourne en réalité un booléen, c’est à dire une valeur `TRUE` si la condition est vrai ou `FALSE` si la condition n’est pas respectée. Cet opérateur est souvent utilisé avec la condition WHERE mais peut aussi trouvé son utilité lorsqu’une sous-requête est utilisée.
-
-#### Valeur `NULL`
-
-Une colonne qui n'est pas renseignée, et donc vide, est dite contenir la valeur `NULL`. Cette valeur n'est pas zéro, c'est une absence de valeur.
-
-Toute expression dont au moins un des termes a la valeur NULL donne comme résultat la valeur `NULL`.
-
-Une exception à cette règle est la fonction `COALESCE`. `COALESCE` (expr1, expr2,...) renvoie la première valeur qui n'est pas null parmi les valeurs des expressions expr1, expr2,...
-
-`COALESCE` permet de remplacer la valeur null par une autre valeur.
-
-**Remarque importante :** les valeurs `NULL` ne sont pas inclues dans les indexes (d'autant plus intéressant dans le cas des indexes uniques).
 
 ### SQL `CASE`
 
