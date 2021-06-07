@@ -22,7 +22,7 @@ Dans cet exemple le “modèle” n’a pas été défini, mais il ressemble tr�
 - `LIKE` 'a%' : ce modèle permet de rechercher toutes les lignes de “colonne” qui commence par un “a”.
 - `LIKE` '%a%' : ce modèle est utilisé pour rechercher tous les enregistrement qui utilisent le caractère “a”.
 - `LIKE` 'pa%on' : ce modèle permet de rechercher les chaines qui commence par “pa” et qui se terminent par “on”, comme “pantalon” ou “pardon”.
-- `LIKE` 'a*c' : peu utilisé, le caractère “*” (underscore) peut être remplacé par n’importe quel caractère, mais un seul caractère uniquement (alors que le symbole pourcentage “%” peut être remplacé par un nombre incalculable de caractères . Ainsi, ce modèle permet de retourner les lignes “aac”, “abc” ou même “azc”.
+- `LIKE` 'a_c' : le caractère “\_“ (underscore) peut être remplacé par n’importe quel caractère, mais un et un seul caractère uniquement (alors que le symbole pourcentage “%” peut être remplacé par un nombre indéterminé de caractères. Ainsi, ce modèle permet de retourner les lignes “aac”, “abc” ou même “azc”.
 
 ### SQL `IN`
 
@@ -51,7 +51,7 @@ FROM table
 WHERE nom_colonne BETWEEN 'valeur1' AND 'valeur2'
 ```
 
-### SQL `IS NULL` / I`S NOT NULL`
+### SQL `IS NULL` / `IS NOT NULL`
 
 Dans le langage SQL, l’opérateur IS permet de filtrer les résultats qui contiennent la valeur NULL. Cet opérateur est indispensable car la valeur NULL est une valeur inconnue et ne peut par conséquent pas être filtrée par les opérateurs de comparaison (cf. égal, inférieur, supérieur ou différent).
 
