@@ -158,6 +158,36 @@ SET `quantite` = (
 )
 ```
 
+### SQL `LENGTH()` et utf8
+
+**¡¡¡ Attention !!!**
+
+```sql
+SELECT LENGTH('mange');
+
++-----------------+
+| LENGTH('mange') |
++-----------------+
+|               5 |
++-----------------+
+
+SELECT LENGTH('mangé');
++------------------+
+| LENGTH('mangé')  |
++------------------+
+|                6 |
++------------------+
+
+SELECT CHAR_LENGTH('mangé');
++-----------------------+
+| CHAR_LENGTH('mangé')  |
++-----------------------+
+|                     5 |
++-----------------------+
+```
+
+---
+
 ## SQL `UNION`
 
 La commande UNION de SQL permet de mettre bout-à-bout les résultats de plusieurs requêtes utilisant elles-même la commande SELECT. C’est donc une commande qui permet de concaténer les résultats de 2 requêtes ou plus. Pour l’utiliser il est nécessaire que chacune des requêtes à concaténer retournes le même nombre de colonnes, avec les mêmes types de données et dans le même ordre.
