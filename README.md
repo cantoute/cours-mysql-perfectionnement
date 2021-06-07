@@ -79,6 +79,18 @@ WHERE NOT nom_colonne IS NULL;
 
 _A savoir :_ l’opérateur IS retourne en réalité un booléen, c’est à dire une valeur `TRUE` si la condition est vrai ou `FALSE` si la condition n’est pas respectée. Cet opérateur est souvent utilisé avec la condition WHERE mais peut aussi trouvé son utilité lorsqu’une sous-requête est utilisée.
 
+#### Valeur `NULL`
+
+Une colonne qui n'est pas renseignée, et donc vide, est dite contenir la valeur `NULL`. Cette valeur n'est pas zéro, c'est une absence de valeur.
+
+Toute expression dont au moins un des termes a la valeur NULL donne comme résultat la valeur `NULL`.
+
+Une exception à cette règle est la fonction `COALESCE`. `COALESCE` (expr1, expr2,...) renvoie la première valeur qui n'est pas null parmi les valeurs des expressions expr1, expr2,...
+
+`COALESCE` permet de remplacer la valeur null par une autre valeur.
+
+**Remarque importante :** les valeurs `NULL` ne sont pas inclues dans les indexes (d'autant plus intéressant dans le cas des indexes uniques).
+
 ### SQL `CASE`
 
 Dans le langage SQL, la commande `CASE … WHEN …` permet d’utiliser des conditions de type “si / sinon” (cf. if / else) similaire à un langage de programmation pour retourner un résultat disponible entre plusieurs possibilités. Le `CASE` peut être utilisé dans n’importe quelle instruction ou clause, telle que `SELECT`, `UPDATE`, `DELETE`, `WHERE`, `ORDER BY` ou `HAVING`.
