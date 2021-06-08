@@ -478,6 +478,12 @@ Si vous utilisez le second format et que vous ne donnez pas de nom à la contrai
 
 On peut désactiver toutes les vérifications d'expression de contrainte en définissant la variable check_constraint_checks sur OFF. Ceci est utile par exemple lors du chargement d'une table qui viole certaines contraintes que vous souhaitez rechercher et corriger ultérieurement dans SQL.
 
+#### Auto_increment
+
+> MariaDB starting with 10.2.6
+>
+> From MariaDB 10.2.6, auto_increment columns are no longer permitted in check constraints. Previously they were permitted, but would not work correctly. See [MDEV-11117](https://jira.mariadb.org/browse/MDEV-11117).
+
 ---
 
 ### `SELECT` IN `SELECT` / `HAVING` / `EXISTS`
