@@ -28,6 +28,7 @@ Trouver les `user` qui ne sont inscrit à aucun `club`.
 1. En utilisant `EXISTS`
 
 2. En utilisant `JOIN`
+   _Astuce : les conditions sur le user n'iront pas dans le `WHERE` mais dans les conditions du `JOIN`_
 
 ### Question 5
 
