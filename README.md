@@ -257,20 +257,6 @@ Cette requête sélectionne le champ “ma_colonne” de la table “nom_du_tabl
 
 ### Éviter les paires inverses
 
-## Les fonctions d'aggrégation (`GROUP BY`)
-
-### `MIN()` `MAX()` `AVG()`
-
-### `GROUP_CONCAT()`
-
-```sql
-SELECT id, GROUP_CONCAT( nom_colonne SEPARATOR ', ' )
-FROM table
-GROUP BY id
-```
-
-### Opérateur `CASE`
-
 ## Optimisations SQL
 
 ### Les indexes
