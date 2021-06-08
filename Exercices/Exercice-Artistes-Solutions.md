@@ -89,20 +89,20 @@ Trouver les clubs auxquels n'est pas inscrit Bob Marley.
 
 1. En utilisant `EXISTS`
 
-```sql
-SELECT club.nom
-FROM club
-WHERE
-  NOT EXISTS (
-    SELECT `user`.id
-    FROM `user`
-      JOIN user_club ON `user`.id = user_club.user_id
-      WHERE
-        club.id = user_club.club_id
-        AND `user`.prenom = 'Bob'
-        AND `user`.nom = 'Marley'
-  );
-```
+   ```sql
+   SELECT club.nom
+   FROM club
+   WHERE
+     NOT EXISTS (
+       SELECT `user`.id
+       FROM `user`
+         JOIN user_club ON `user`.id = user_club.user_id
+         WHERE
+           club.id = user_club.club_id
+           AND `user`.prenom = 'Bob'
+           AND `user`.nom = 'Marley'
+     );
+   ```
 
 2. En utilisant `JOIN`
 
