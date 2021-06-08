@@ -353,11 +353,11 @@ En effet, en SQL les deux dernières lignes, même identiques, ne sont pas égal
 ```sql
 SELECT (3, NULL) = (3, NULL);
 
-+---------------------- +
++-----------------------+
 | (3, NULL) = (3, NULL) |
-+---------------------- +
-| 0                     |
-+---------------------- +
++-----------------------+
+|                  NULL |
++-----------------------+
 ```
 
 Dans MariaDB, vous pouvez combiner cela avec des colonnes virtuelles pour appliquer l'unicité sur un sous-ensemble de lignes dans une table :
