@@ -1,11 +1,11 @@
 # Exercices les Artistes
 
 Le travail est à réaliser à partir du fichier disponible à l’adresse suivante :
-[Artistes.sql](Artistes.sql)
+[Exercice-Artistes.sql](Exercice-Artistes.sql)
 
 Une fois ce fichier téléchargé, vous l’importerez dans une nouvelle base de données.
 
-<img src="Artistes.png" style="display:block; margin:auto;" />
+<img src="Exercice-Artistes.png" style="display:block; margin:auto;" />
 
 ---
 
