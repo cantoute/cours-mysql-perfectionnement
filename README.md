@@ -394,6 +394,92 @@ WHERE last_name LIME '%g';
 
 ### Les contraintes
 
+MariaDB prend en charge l'implémentation de contraintes au niveau de la table à l'aide des instructions CREATE TABLE ou ALTER TABLE. Une contrainte de table restreint les données que vous pouvez ajouter à la table. Si vous essayez d'insérer des données non valides dans une colonne, MariaDB renvoie une erreur.
+
+#### Syntaxe
+
+```
+[CONSTRAINT [symbol]] constraint_expression
+
+constraint_expression:
+  | PRIMARY KEY [index_type] (index_col_name, ...) [index_option] ...
+  | FOREIGN KEY [index_name] (index_col_name, ...)
+       REFERENCES tbl_name (index_col_name, ...)
+       [ON DELETE reference_option]
+       [ON UPDATE reference_option]
+  | UNIQUE [INDEX|KEY] [index_name]
+       [index_type] (index_col_name, ...) [index_option] ...
+  | CHECK (check_constraints)
+
+index_type:
+  USING {BTREE | HASH | RTREE}
+
+index_col_name:
+  col_name [(length)] [ASC | DESC]
+
+index_option:
+  | KEY_BLOCK_SIZE [=] value
+  | index_type
+  | WITH PARSER parser_name
+  | COMMENT 'string'
+  | CLUSTERING={YES|NO}
+
+reference_option:
+  RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT
+```
+
+Description
+Constraints provide restrictions on the data you can add to a table. This allows you to enforce data integrity from MariaDB, rather than through application logic. When a statement violates a constraint, MariaDB throws an error.
+
+There are four types of table constraints:
+
+| Constraint  | Description                                                               |
+| ----------- | ------------------------------------------------------------------------- |
+| PRIMARY KEY | Sets the column for referencing rows. Values must be unique and not null. |
+| FOREIGN KEY | Sets the column to reference the primary key on another table.            |
+| UNIQUE      | Requires values in column or columns only occur once in the table.        |
+| CHECK       | Checks whether the data meets the given condition.                        |
+
+La table [Information Schema TABLE_CONSTRAINTS](https://mariadb.com/kb/en/information-schema-table_constraints-table/) contient des informations sur les tables qui ont des contraintes.
+
+#### FOREIGN KEY Constraints
+
+InnoDB supports foreign key constraints. The syntax for a foreign key constraint definition in InnoDB looks like this:
+
+```
+[CONSTRAINT [symbol]] FOREIGN KEY
+    [index_name] (index_col_name, ...)
+    REFERENCES tbl_name (index_col_name,...)
+    [ON DELETE reference_option]
+    [ON UPDATE reference_option]
+
+reference_option:
+    RESTRICT | CASCADE | SET NULL | NO ACTION
+```
+
+#### CHECK Constraints
+
+> MariaDB à partir de 10.2.1
+>
+> A partir de MariaDB 10.2.1, les contraintes sont appliquées. Avant MariaDB 10.2.1, les expressions de contrainte étaient acceptées dans la syntaxe mais ignorées.
+
+Dans MariaDB 10.2.1, vous pouvez définir des contraintes de 2 manières différentes :
+
+- `CHECK(expression)` comme argument de définition de colonne.
+- `CONSTRAINT [constraint_name] CHECK (expression)`
+
+Before a row is inserted or updated, all constraints are evaluated in the order they are defined. If any constraint expression returns false, then the row will not be inserted or updated. One can use most deterministic functions in a constraint, including UDFs.
+
+```sql
+CREATE TABLE t1 (a INT CHECK (a>2), b INT CHECK (b>2), CONSTRAINT a_greater CHECK (a>b));
+```
+
+Si vous utilisez le second format et que vous ne donnez pas de nom à la contrainte, alors la contrainte recevra un nom généré automatiquement. Ceci est fait pour que vous puissiez ultérieurement supprimer la contrainte avec ALTER TABLE DROP nom_contrainte.
+
+On peut désactiver toutes les vérifications d'expression de contrainte en définissant la variable check_constraint_checks sur OFF. Ceci est utile par exemple lors du chargement d'une table qui viole certaines contraintes que vous souhaitez rechercher et corriger ultérieurement dans SQL.
+
+---
+
 ### `SELECT` IN `SELECT` / `HAVING` / `EXISTS`
 
 Dans ces cas de figure, l'optimiseur de requête ne pourra pas utiliser les indexes.
