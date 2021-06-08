@@ -112,8 +112,9 @@ Trouver les clubs auxquels n'est pas inscrit Bob Marley.
      club
        LEFT JOIN user_club ON user_club.club_id = club.id
        LEFT JOIN `user` ON (
-         user.id = user_club.user_id
-           AND `user`.nom = 'Marley' AND `user`.prenom = 'Bob'
+        user.id = user_club.user_id
+        AND `user`.nom = 'Marley'
+        AND `user`.prenom = 'Bob'
        )
    WHERE user_club.id IS NULL;
    ```
