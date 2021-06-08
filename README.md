@@ -616,7 +616,7 @@ SELECT sp.id
 FROM subsource_position AS sp
   LEFT JOIN subsource AS s ON (s.postion_id = sp.id)
 WHERE
-  s.postion_id IS NULL
+  s.postion_id IS NULL;
 ```
 
 ### Analyse d'execution (`EXPLAIN`)
