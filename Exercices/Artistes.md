@@ -1,8 +1,15 @@
 # Exercices les Artistes
 
-[source sql](Artistes.sql)
+Le travail est à réaliser à partir du fichier disponible à l’adresse suivante :
+[Artistes.sql](Artistes.sql)
 
-### Lister les clubs auxquels sont inscrit les 'Bob' (sans doubles)
+Une fois ce fichier téléchargé, vous l’importerez dans une nouvelle base de données.
+
+<img src="Artistes.png" style="display:block; margin:auto;" />
+
+---
+
+### Lister les clubs auxquels sont inscrits les 'Bob' (sans doubles)
 
 ### Lister les `user` par `club`
 
