@@ -9,20 +9,34 @@ Une fois ce fichier téléchargé, vous l’importerez dans une nouvelle base de
 
 ---
 
-### Lister les clubs auxquels sont inscrits les 'Bob' (sans doubles)
+### Question 1
 
-### Lister les `user` par `club`
+Lister les clubs auxquels sont inscrits les 'Bob' _(sans doublons)_
 
-### Nommer le `club` le plus populaire (càd qui a le plus de membres)
+### Question 2
 
-### Trouver les `user` qui ne sont inscrit à aucun `club`.
+Lister les `user` par `club`
 
-#### En utilisant `EXISTS`
+### Question 3
 
-#### En utilisant `JOIN`
+Nommer le `club` le plus populaire. _(càd qui a le plus de membres)_
 
-### Trouver les clubs auxquels ne sont pas inscrit les `user`
+### Question 4
 
-### Inscrire Bob Marley à tous les clubs en une seule requête
+Trouver les `user` qui ne sont inscrit à aucun `club`.
 
-### Virer tous les Bob du club de foot.
+1. En utilisant `EXISTS`
+
+2. En utilisant `JOIN`
+
+### Question 5
+
+Trouver les clubs auxquels ne sont pas inscrit Bob Marley.
+
+### Question 6
+
+Inscrire Bob Marley à tous les clubs en une seule requête.
+
+### Question 7
+
+Virer tous les 'Bob' du club de foot en une seule requête.
