@@ -42,7 +42,7 @@ Nommer le `club` le plus populaire. _(càd qui a le plus de membres)_
 -- pour prendre en compte les clubs qui seraient ex æquo
 
 SELECT
-  GROUP_CONCAT(temp.nom),
+  GROUP_CONCAT(temp.nom ORDER BY temp.nom ASC SEPARATOR ', '),
   temp.compteur
 FROM (
   SELECT
