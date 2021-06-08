@@ -1,4 +1,4 @@
-# Exercices les Artistes
+# Solutions - Exercice les Artistes
 
 Le travail est à réaliser à partir du fichier disponible à l’adresse suivante :
 [Exercice-Artistes.sql](Exercice-Artistes.sql)
