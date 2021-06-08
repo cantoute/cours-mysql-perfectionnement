@@ -261,11 +261,169 @@ Cette requête sélectionne le champ “ma_colonne” de la table “nom_du_tabl
 
 ### Les indexes
 
+#### Céf primaire (_Primary Key_)
+
+Une clé primaire est unique et ne peut jamais être nulle. Il identifiera toujours un seul enregistrement, et chaque enregistrement doit être représenté. Une table ne peut avoir qu'une seule clé primaire.
+
+```sql
+ALTER TABLE Employees ADD PRIMARY KEY(ID);
+```
+
+### Unique Index
+
+Un index unique doit être unique, mais il peut être nul. Ainsi, chaque valeur de clé n'identifie qu'un seul enregistrement, mais chaque enregistrement n'a pas besoin d'être représenté.
+
+For example, to create a unique key on the Employee_Code field, as well as a primary key, use:
+
+```sql
+CREATE TABLE `Employees` (
+  `ID` TINYINT(3) UNSIGNED NOT NULL,
+  `First_Name` VARCHAR(25) NOT NULL,
+  `Last_Name` VARCHAR(25) NOT NULL,
+  `Position` VARCHAR(25) NOT NULL,
+  `Home_Address` VARCHAR(50) NOT NULL,
+  `Home_Phone` VARCHAR(12) NOT NULL,
+  `Employee_Code` VARCHAR(25) NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY (`Employee_Code`)
+) ENGINE=Aria;
+```
+
+Les indexes peuvent également être ajoutés ultérieurement :
+
+```sql
+ALTER TABLE Employees ADD UNIQUE `EmpCode`(`Employee_Code`);
+
+-- équivalent
+CREATE UNIQUE INDEX HomePhone ON Employees(Home_Phone);
+```
+
+Les index peuvent impliquer plusieurs colonnes. MariaDB est capable d'utiliser une ou plusieurs colonnes sur la partie la plus à gauche de l'index si elle ne peut pas utiliser l'index entier.
+
+Exemple :
+
+```sql
+CREATE TABLE t1 (a INT NOT NULL, b INT, UNIQUE (a,b));
+
+INSERT INTO t1 values (1,1), (2,2);
+
+SELECT * FROM t1;
++---+------+
+| a | b    |
++---+------+
+| 1 |    1 |
+| 2 |    2 |
++---+------+
+```
+
+Étant donné que l'index est défini comme unique sur les deux colonnes a et b, la ligne suivante est valide, car si ni a ni b ne sont uniques en eux-mêmes, la combinaison est unique :
+
+```sql
+INSERT INTO t1 values (2,1);
+
+SELECT * FROM t1;
++---+------+
+| a | b    |
++---+------+
+| 1 |    1 |
+| 2 |    1 |
+| 2 |    2 |
++---+------+
+```
+
+Le fait qu'une contrainte UNIQUE puisse être NULL est souvent négligé. En SQL, tout NULL n'est jamais égal à quoi que ce soit, même pas à un autre NULL. Par conséquent, une contrainte UNIQUE n'empêchera pas de stocker des lignes en double si elles contiennent des valeurs nulles :
+
+```sql
+INSERT INTO t1 values (3,NULL), (3, NULL);
+
+SELECT * FROM t1;
++---+------+
+| a | b    |
++---+------+
+| 1 |    1 |
+| 2 |    1 |
+| 2 |    2 |
+| 3 | NULL |
+| 3 | NULL |
++---+------+
+```
+
+En effet, en SQL les deux dernières lignes, même identiques, ne sont pas égales :
+
+```sql
+SELECT (3, NULL) = (3, NULL);
+
++---------------------- +
+| (3, NULL) = (3, NULL) |
++---------------------- +
+| 0                     |
++---------------------- +
+```
+
+Dans MariaDB, vous pouvez combiner cela avec des colonnes virtuelles pour appliquer l'unicité sur un sous-ensemble de lignes dans une table :
+
+```sql
+create table Table_1 (
+  user_name varchar(10),
+  status enum('Active', 'On-Hold', 'Deleted'),
+  del char(0) as (if(status in ('Active', 'On-Hold'),'', NULL)) persistent,
+  unique(user_name,del)
+)
+```
+
+Cette structure de table garantit que tous les utilisateurs actifs ou en attente ont des noms distincts, mais dès qu'un utilisateur est supprimé, son nom ne fait plus partie de la contrainte d'unicité et un autre utilisateur peut obtenir le même nom.
+
+Si un index unique consiste en une colonne dans laquelle les caractères de fin de remplissage sont supprimés ou ignorés, les insertions dans cette colonne où les valeurs diffèrent uniquement par le nombre de caractères de fin de remplissage entraîneront une erreur de clé en double.
+
 #### L'opérateur `LIKE`
+
+L'opérteur LIKE ne peut s'appuyer sur les indexes uniquement dans pour les cas de recherche de chaines commençant par.
+
+```sql
+-- s'il existe un index, il pourra être utilisé
+SELECT username
+FROM student
+WHERE last_name LIME 'g%';
+
+-- l'index ne pourra être utilisé
+SELECT username
+FROM student
+WHERE last_name LIME '%g';
+
+```
 
 ### Les contraintes
 
-### `SELECT` IN `SELECT` / `HAVING`
+### `SELECT` IN `SELECT` / `HAVING` / `EXISTS`
+
+Dans ces cas de figure, l'optimiseur de requête ne pourra pas utiliser les indexes.
+
+Souvent ces écritures permettent de simplifier l'écriture mais aussi la lecture/comprehension de la requête mais s'il vous fallait améliorer les performances de la requête et que vous avez le choix d'utiliser une liaison de type `JOIN` vous obtiendrez un gain de performance significatif.
+
+#### ne peut s'appuyer sur les index
+
+```sql
+SELECT id
+FROM subsource_position
+WHERE
+  id NOT IN (SELECT position_id FROM subsource)
+```
+
+#### peut utiliser les indexes de façon optimale
+
+```sql
+SELECT id FROM subsource_position
+EXCEPT
+SELECT position_id FROM subsource;
+```
+
+```sql
+SELECT sp.id
+FROM subsource_position AS sp
+  LEFT JOIN subsource AS s ON (s.postion_id = sp.id)
+WHERE
+  s.postion_id IS NULL
+```
 
 ### Analyse d'execution (`EXPLAIN`)
 
