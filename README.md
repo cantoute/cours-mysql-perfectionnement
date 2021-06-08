@@ -286,7 +286,7 @@ CREATE TABLE `Employees` (
   `Employee_Code` VARCHAR(25) NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY (`Employee_Code`)
-) ENGINE=Aria;
+);
 ```
 
 Les indexes peuvent également être ajoutés ultérieurement :
