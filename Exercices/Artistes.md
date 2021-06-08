@@ -15,7 +15,7 @@ Lister les clubs auxquels sont inscrits les 'Bob' _(sans doublons)_
 
 ### Question 2
 
-Lister les `user` par `club`
+Lister les membres du club de foot.
 
 ### Question 3
 
