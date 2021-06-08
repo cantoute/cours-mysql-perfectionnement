@@ -66,7 +66,7 @@ Trouver les `user` qui ne sont inscrit à aucun `club`.
 1. En utilisant `EXISTS`
 
    ```sql
-   SELECT *
+   SELECT `user`.nom, `user`.prenom
    FROM `user`
    WHERE NOT EXISTS (
      SELECT * from `user_club`
