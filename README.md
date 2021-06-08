@@ -484,6 +484,108 @@ On peut désactiver toutes les vérifications d'expression de contrainte en déf
 >
 > From MariaDB 10.2.6, auto_increment columns are no longer permitted in check constraints. Previously they were permitted, but would not work correctly. See [MDEV-11117](https://jira.mariadb.org/browse/MDEV-11117).
 
+#### Examples
+
+```sql
+CREATE TABLE product (
+  category INT NOT NULL,
+  id INT NOT NULL,
+  price DECIMAL,
+  PRIMARY KEY(category, id)) ENGINE=INNODB;
+
+CREATE TABLE customer (
+  id INT NOT NULL,
+  PRIMARY KEY (id)) ENGINE=INNODB;
+
+CREATE TABLE product_order (
+  no INT NOT NULL AUTO_INCREMENT,
+  product_category INT NOT NULL,
+  product_id INT NOT NULL,
+  customer_id INT NOT NULL,
+  PRIMARY KEY(no),
+  INDEX (product_category, product_id),
+  FOREIGN KEY (product_category, product_id)
+    REFERENCES product(category, id)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  INDEX (customer_id),
+  FOREIGN KEY (customer_id)
+    REFERENCES customer(id)) ENGINE=INNODB;
+```
+
+> MariaDB starting with 10.2.1
+>
+> The following examples will work from MariaDB 10.2.1 onwards.
+
+Numeric constraints and comparisons:
+
+```sql
+CREATE TABLE t1 (a INT CHECK (a>2), b INT CHECK (b>2), CONSTRAINT a_greater CHECK (a>b));
+
+INSERT INTO t1(a) VALUES (1);
+ERROR 4022 (23000): CONSTRAINT `a` failed for `test`.`t1`
+
+INSERT INTO t1(a,b) VALUES (3,4);
+ERROR 4022 (23000): CONSTRAINT `a_greater` failed for `test`.`t1`
+
+INSERT INTO t1(a,b) VALUES (4,3);
+Query OK, 1 row affected (0.04 sec)
+```
+
+Dropping a constraint:
+
+```sql
+ALTER TABLE t1 DROP CONSTRAINT a_greater;
+```
+
+```sql
+Adding a constraint:
+
+ALTER TABLE t1 ADD CONSTRAINT a_greater CHECK (a>b);
+Date comparisons and character length:
+
+CREATE TABLE t2 (
+  name VARCHAR(30) CHECK (CHAR_LENGTH(name)>2),
+  start_date DATE,
+  end_date DATE CHECK (
+    start_date IS NULL
+    OR end_date IS NULL
+    OR start_date<end_date
+  )
+);
+
+INSERT INTO t2(name, start_date, end_date) VALUES('Ione', '2003-12-15', '2014-11-09');
+Query OK, 1 row affected (0.04 sec)
+
+INSERT INTO t2(name, start_date, end_date) VALUES('Io', '2003-12-15', '2014-11-09');
+ERROR 4022 (23000): CONSTRAINT `name` failed for `test`.`t2`
+
+INSERT INTO t2(name, start_date, end_date) VALUES('Ione', NULL, '2014-11-09');
+Query OK, 1 row affected (0.04 sec)
+
+INSERT INTO t2(name, start_date, end_date) VALUES('Ione', '2015-12-15', '2014-11-09');
+ERROR 4022 (23000): CONSTRAINT `end_date` failed for `test`.`t2`
+```
+
+A misplaced parenthesis:
+
+```sql
+CREATE TABLE t3 (name VARCHAR(30) CHECK (CHAR_LENGTH(name>2)), start_date DATE,
+  end_date DATE CHECK (start_date IS NULL OR end_date IS NULL OR start_date<end_date));
+Query OK, 0 rows affected (0.32 sec)
+
+INSERT INTO t3(name, start_date, end_date) VALUES('Io', '2003-12-15', '2014-11-09');
+Query OK, 1 row affected, 1 warning (0.04 sec)
+
+SHOW WARNINGS;
++---------+------+----------------------------------------+
+| Level   | Code | Message                                |
++---------+------+----------------------------------------+
+| Warning | 1292 | Truncated incorrect DOUBLE value: 'Io' |
++---------+------+----------------------------------------+
+```
+
+Compare the definition of table t2 to table t3. CHAR_LENGTH(name)>2 is very different to CHAR_LENGTH(name>2) as the latter mistakenly performs a numeric comparison on the name field, leading to unexpected results.
+
 ---
 
 ### `SELECT` IN `SELECT` / `HAVING` / `EXISTS`
@@ -492,7 +594,7 @@ Dans ces cas de figure, l'optimiseur de requête ne pourra pas utiliser les inde
 
 Souvent ces écritures permettent de simplifier l'écriture mais aussi la lecture/comprehension de la requête mais s'il vous fallait améliorer les performances de la requête et que vous avez le choix d'utiliser une liaison de type `JOIN` vous obtiendrez un gain de performance significatif.
 
-#### ne peut s'appuyer sur les index
+#### ne peut s'appuyer sur les indexes
 
 ```sql
 SELECT id
