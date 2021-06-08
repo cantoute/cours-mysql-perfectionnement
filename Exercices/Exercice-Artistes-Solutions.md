@@ -65,23 +65,23 @@ Trouver les `user` qui ne sont inscrit à aucun `club`.
 
 1. En utilisant `EXISTS`
 
-```sql
-SELECT *
-FROM `user`
-WHERE NOT EXISTS (
-  SELECT * from `user_club`
-  WHERE user.id = user_club.user_id
-);
-```
+   ```sql
+   SELECT *
+   FROM `user`
+   WHERE NOT EXISTS (
+     SELECT * from `user_club`
+     WHERE user.id = user_club.user_id
+   );
+   ```
 
 2. En utilisant `JOIN`
 
-```sql
-SELECT user.nom, user.prenom
-FROM user
-  LEFT JOIN user_club ON user_club.user_id = user.id
-WHERE user_club.id IS NULL;
-```
+   ```sql
+   SELECT user.nom, user.prenom
+   FROM user
+     LEFT JOIN user_club ON user_club.user_id = user.id
+   WHERE user_club.id IS NULL;
+   ```
 
 ### Question 5
 
