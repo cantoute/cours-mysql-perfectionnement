@@ -31,7 +31,7 @@ Trouver les `user` qui ne sont inscrit à aucun `club`.
 
 ### Question 5
 
-Trouver les clubs auxquels ne sont pas inscrit Bob Marley.
+Trouver les clubs auxquels n'est pas inscrit Bob Marley.
 
 ### Question 6
 
