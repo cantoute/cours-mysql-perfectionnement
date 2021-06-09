@@ -251,4 +251,19 @@ Ajouter les contraintes (`CONSTRAINT` / `UNIQUE`) de sorte que :
    ```
 
 2. on ne puisse supprimer un club qui possède des membres,
+
+   ```sql
+   ALTER TABLE `user_club`
+     ADD CONSTRAINT `fk_user_club_club_id`
+       FOREIGN KEY (`club_id`) REFERENCES `club` (`id`)
+         ON DELETE RESTRICT ON UPDATE CASCADE;
+   ```
+
 3. si on supprime un compte `user` il soit désinscrit des clubs. _(Càd que les entrées correspondantes soient supprimées de la table `user_club`.)_
+
+   ```sql
+   ALTER TABLE `user_club`
+     ADD CONSTRAINT `fk_user_club_user_id`
+       FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+         ON DELETE CASCADE ON UPDATE CASCADE;
+   ```
