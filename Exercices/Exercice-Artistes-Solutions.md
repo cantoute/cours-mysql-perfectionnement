@@ -104,15 +104,34 @@ Trouver les clubs auxquels n'est pas inscrit Bob Marley.
      );
    ```
 
-2. En utilisant `JOIN`
+2. En utilisant `IN`
 
    ```sql
+   -- solution la plus simple
+   SELECT u.prenom, u.nom, c.nom
+   FROM
+     `user` AS u,
+     club AS c
+   WHERE
+     c.id NOT IN (
+       SELECT uc.club_id
+       FROM user_club AS uc
+       WHERE uc.user_id = u.id
+     )
+     AND u.nom = 'Marley'
+     AND u.prenom = 'Bob';
+   ```
+
+3. En utilisant `JOIN`
+
+   ```sql
+   -- cette solution pourra utiliser pleinement les index
    SELECT club.nom
    FROM
      club
      LEFT JOIN user_club ON user_club.club_id = club.id
      LEFT JOIN `user` ON (
-       user.id = user_club.user_id
+       `user`.id = user_club.user_id
        AND `user`.nom = 'Marley'
        AND `user`.prenom = 'Bob'
      )
