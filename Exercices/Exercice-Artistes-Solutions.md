@@ -138,6 +138,22 @@ Trouver les clubs auxquels n'est pas inscrit Bob Marley.
    WHERE user_club.id IS NULL;
    ```
 
+   ```sql
+   -- plus élégante :)
+   SELECT c.nom
+   FROM
+     `user` AS u
+     CROSS JOIN club AS c
+     LEFT JOIN user_club AS uc ON (
+       uc.user_id = u.id
+       AND c.id = uc.club_id
+     )
+   WHERE
+     uc.id IS NULL
+     AND u.prenom = 'Bob'
+     AND u.nom = 'Marley'
+   ```
+
 ### Question 6
 
 Inscrire Bob Marley à tous les clubs en une seule requête.
