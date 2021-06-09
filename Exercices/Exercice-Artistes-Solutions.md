@@ -151,7 +151,15 @@ Trouver les clubs auxquels n'est pas inscrit Bob Marley.
    WHERE
      uc.id IS NULL
      AND u.prenom = 'Bob'
-     AND u.nom = 'Marley'
+     AND u.nom = 'Marley';
+
+   +---------+
+   | nom     |
+   +---------+
+   | Golf    |
+   | Tennis  |
+   | Échecs  |
+   +---------+
    ```
 
 ### Question 6
