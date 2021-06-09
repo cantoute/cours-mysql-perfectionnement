@@ -199,7 +199,8 @@ Une ligne par membre, le nom des clubs séparé par une virgule (`', '`). S'il n
 
 ### Question 10
 
-Ajouter les contraintes (`CONSTRAINT`) de sorte que :
+Ajouter les contraintes (`CONSTRAINT` / `UNIQUE`) de sorte que :
 
+- on ne puisse avoir deux membres avec même nom, prénom, date naissance et que l'index soit utilisable pour une recherche par nom.
 - on ne puisse supprimer un club qui possède des membres,
 - si on supprime un compte `user` il soit désinscrit des clubs. _(Càd que les entrées correspondantes soient supprimées de la table `user_club`.)_
