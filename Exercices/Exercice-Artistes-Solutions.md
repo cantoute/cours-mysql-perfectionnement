@@ -247,7 +247,7 @@ Ajouter les contraintes (`CONSTRAINT` / `UNIQUE`) de sorte que :
 1. on ne puisse avoir deux membres avec même nom, prénom, date naissance et que l'index soit utilisable pour une recherche par nom.
 
    ```sql
-   ALTER TABLE `cours_artistes`.`user` ADD UNIQUE (`nom`, `prenom`, `date_naissance`);
+   ALTER TABLE `user` ADD UNIQUE (`nom`, `prenom`, `date_naissance`);
    ```
 
 2. on ne puisse supprimer un club qui possède des membres,
