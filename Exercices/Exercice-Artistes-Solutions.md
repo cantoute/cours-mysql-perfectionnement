@@ -142,6 +142,20 @@ Trouver les clubs auxquels n'est pas inscrit Bob Marley.
 
 Inscrire Bob Marley à tous les clubs en une seule requête.
 
+```sql
+INSERT INTO user_club (user_id, club_id)
+SELECT `user`.id, club.id
+FROM
+  club
+  LEFT JOIN user_club ON user_club.club_id = club.id
+  LEFT JOIN `user` ON (
+    `user`.id = user_club.user_id
+    AND `user`.nom = 'Marley'
+    AND `user`.prenom = 'Bob'
+  )
+WHERE user_club.id IS NULL;
+```
+
 ### Question 7
 
 Virer tous les 'Bob' du club de foot en une seule requête.
