@@ -41,22 +41,23 @@ Nommer le `club` le plus populaire. _(càd qui a le plus de membres)_
 ```sql
 -- pour prendre en compte les clubs qui seraient ex æquo
 
+-- donnant les nom des clubs dans une seule ligne
 SELECT
-  GROUP_CONCAT(temp.nom ORDER BY temp.nom ASC SEPARATOR ', '),
-  temp.compteur
+  GROUP_CONCAT(temp.club_nom ORDER BY temp.club_nom ASC SEPARATOR ', '),
+  temp.nb_membres
 FROM (
   SELECT
-    club.nom,
-    COUNT(club.id) AS compteur
-  FROM club
-    INNER JOIN user_club ON club.id = user_club.club_id
-    INNER JOIN user ON user_club.user_id = user.id
-  GROUP BY club.nom
-  ORDER BY compteur DESC
+    c.nom AS club_nom,
+    COUNT(c.id) AS nb_membres
+  FROM club AS c
+    LEFT JOIN user_club AS uc ON c.id = uc.club_id
+    LEFT JOIN `user` AS u ON uc.user_id = u.id
+  GROUP BY c.id
+  ORDER BY nb_membres DESC
 ) AS temp
-GROUP BY temp.compteur
-ORDER BY temp.compteur DESC
-LIMIT 1
+GROUP BY temp.nb_membres
+ORDER BY temp.nb_membres DESC
+LIMIT 1;
 ```
 
 ### Question 4
@@ -168,16 +169,18 @@ Inscrire Bob Marley à tous les clubs en une seule requête.
 
 ```sql
 INSERT INTO user_club (user_id, club_id)
-SELECT `user`.id, club.id
+SELECT u.id AS user_id, c.id AS club_id
 FROM
-  club
-  LEFT JOIN user_club AS uc ON uc.club_id = club.id
-  LEFT JOIN `user` ON (
-    `user`.id = uc.user_id
-    AND `user`.nom = 'Marley'
-    AND `user`.prenom = 'Bob'
+  `user` AS u
+  CROSS JOIN club AS c
+  LEFT JOIN user_club AS uc ON (
+    uc.user_id = u.id
+    AND c.id = uc.club_id
   )
-WHERE uc.id IS NULL;
+WHERE
+  uc.id IS NULL
+  AND u.prenom = 'Bob'
+  AND u.nom = 'Marley';
 ```
 
 ### Question 7
