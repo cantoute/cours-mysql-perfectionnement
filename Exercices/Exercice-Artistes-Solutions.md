@@ -187,12 +187,41 @@ WHERE
 
 Virer tous les 'Bob' du club de foot en une seule requête.
 
+```sql
+DELETE FROM user_club
+WHERE EXISTS (
+  SELECT u.prenom
+  FROM
+    `user` AS u,
+    `club` AS c
+  WHERE
+    club.nom = 'Foot'
+    AND c.id = user_club.club_id
+    AND u.prenom = 'Bob'
+    AND u.id = user_club.user_id
+)
+```
+
 ### Question 8
 
 Recherche veufs et orphelins :
 
 - Trouver les clubs qui n'ont aucun membre.
+
+  ```sql
+  SELECT club.nom
+  FROM club
+    LEFT JOIN user_club ON club.id = user_club.club_id
+  WHERE user_club.id IS NULL;
+  ```
+
 - Trouver les membres qui ne sont inscrit à aucun club.
+  ```sql
+  SELECT *
+  FROM `user`
+    LEFT JOIN user_club ON user_club.user_id = `user`.id
+  WHERE user_club.id IS NULL;
+  ```
 
 ### Question 9
 
