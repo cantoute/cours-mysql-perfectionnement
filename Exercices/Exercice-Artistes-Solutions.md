@@ -229,6 +229,17 @@ Lister tous les utilisateurs ainsi que les clubs auxquels ils sont inscrit.
 
 Une ligne par membre, le nom des clubs séparé par une virgule (`', '`). S'il n'est inscrit à aucun club que soit mentionné "Membre d'aucun club." à la place.
 
+```sql
+SELECT
+  `user`.*,
+  COALESCE(GROUP_CONCAT(club.nom SEPARATOR ', '), 'Membre d''aucun club') AS clubs
+FROM `user`
+  LEFT JOIN user_club ON user_club.user_id = `user`.id
+  LEFT JOIN club ON user_club.club_id = club.id
+GROUP BY `user`.id
+ORDER BY `user`.nom, `user`.prenom;
+```
+
 ### Question 10
 
 Ajouter les contraintes (`CONSTRAINT` / `UNIQUE`) de sorte que :
