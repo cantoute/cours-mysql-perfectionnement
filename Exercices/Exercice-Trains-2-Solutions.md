@@ -1,4 +1,4 @@
-# Exercice Trains 2
+# Exercice Trains 2 - Solutions
 
 ## On considère le schéma de base de données suivant :
 
