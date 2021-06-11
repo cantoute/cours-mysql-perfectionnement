@@ -115,6 +115,44 @@ ALTER TABLE train
 
 ```
 
+Data
+
+```sql
+INSERT INTO ligne (id, ville_dep, ville_arr)
+VALUES
+  (NULL, 'Lyon', 'Clermont-Ferrand'),
+  (NULL, 'Lyon', 'Marseille');
+
+INSERT INTO arret
+  (ligne_id, rang, ville)
+VALUES
+  (1, 1, 'Gannat'),
+  (2, 1, 'Valence'),
+  (2, 2, 'Avignon');
+
+INSERT INTO trafic (no_train, ligne_id, no_jour)
+VALUES
+  (1,1,1),(1,1,2),(1,1,3),(1,1,4), (1,1,5),(2,2,6),(2,2,7);
+
+INSERT INTO wagon
+  (no_wagon, type_wagon, poids_vide, capacite, etat)
+VALUES
+  (1,'Passagers', NULL, 150, 'Libre' ),
+  (2,'Marchandise', 12345, NULL, 'Occupé'),
+  (3,'Passagers', NULL, 150, 'Libre' ),
+  (4,'Marchandise', 12345, NULL, 'Occupé'),
+  (5,'Passagers', NULL, 150, 'Libre' ),
+  (6,'Marchandise', 12345, NULL, 'Occupé'),
+  (7,'Passagers', NULL, 150, 'Libre' ),
+  (8,'Marchandise', 12345, NULL, 'Occupé'),
+  (9,'Passagers', NULL, 150, 'Libre' ),
+  (10,'Marchandise', 12345, NULL, 'Occupé');
+
+INSERT INTO train (no_train, no_wagon)
+VALUES
+  (1,1), (1,3), (1,4), (1,5), (2,9), (2,10);
+```
+
 ## Donner les requêtes SQL permettant de répondre aux questions suivantes :
 
 1. Donner la liste des gares traversées par la ligne 3. Le résultat sera renommé ’GareTraverseeParL3’ et sera trié selon le rang de l’arrêt.
