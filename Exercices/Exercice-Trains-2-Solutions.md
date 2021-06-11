@@ -27,11 +27,10 @@ Wagon (NoWagon, TypeWagon, PoidsVide, Capacite, Etat)
 <img src="Exercice-Trains-2-Solutions.png" style="display:block; margin: 1em auto;" />
 
 ```sql
-
 DROP TABLE IF EXISTS arret;
 CREATE TABLE arret (
   id int(11) NOT NULL,
-  ligne_id int(11) NOT NULL,
+  no_ligne int(11) NOT NULL,
   rang int(11) NOT NULL,
   ville varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -39,6 +38,7 @@ CREATE TABLE arret (
 DROP TABLE IF EXISTS ligne;
 CREATE TABLE ligne (
   id int(11) NOT NULL,
+  no_ligne int(11) NOT NULL,
   ville_dep varchar(255) NOT NULL,
   ville_arr varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -46,20 +46,22 @@ CREATE TABLE ligne (
 DROP TABLE IF EXISTS trafic;
 CREATE TABLE trafic (
   id int(11) NOT NULL,
-  ligne_id int(11) NOT NULL,
-  jour int(11) NOT NULL
+  no_train int(11) NOT NULL,
+  no_ligne int(11) NOT NULL,
+  no_jour int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS train;
 CREATE TABLE train (
   id int(11) NOT NULL,
-  trafic_id int(11) NOT NULL,
-  wagon_id int(11) NOT NULL
+  no_train int(11) NOT NULL,
+  no_wagon int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS wagon;
 CREATE TABLE wagon (
   id int(11) NOT NULL,
+  no_wagon int(11) NOT NULL,
   type_wagon enum('Passagers','Marchandise') NOT NULL,
   poids_vide int(11) DEFAULT NULL,
   capacite int(11) DEFAULT NULL,
@@ -69,22 +71,26 @@ CREATE TABLE wagon (
 
 ALTER TABLE arret
   ADD PRIMARY KEY (id),
-  ADD KEY ligne_id (ligne_id);
+  ADD UNIQUE KEY rang (rang,no_ligne),
+  ADD KEY ligne_id (no_ligne);
 
 ALTER TABLE ligne
-  ADD PRIMARY KEY (id);
+  ADD PRIMARY KEY (id),
+  ADD UNIQUE KEY no_ligne (no_ligne);
 
 ALTER TABLE trafic
   ADD PRIMARY KEY (id),
-  ADD KEY ligne_id (ligne_id);
+  ADD KEY ligne_id (no_ligne),
+  ADD KEY no_train (no_train);
 
 ALTER TABLE train
   ADD PRIMARY KEY (id),
-  ADD UNIQUE KEY trafic_id (trafic_id,wagon_id),
-  ADD KEY wagon_id (wagon_id);
+  ADD KEY fk_train_no_train (no_train),
+  ADD KEY fk_train_no_wagon (no_wagon);
 
 ALTER TABLE wagon
-  ADD PRIMARY KEY (id);
+  ADD PRIMARY KEY (id),
+  ADD UNIQUE KEY no_wagon (no_wagon);
 
 
 ALTER TABLE arret
@@ -104,53 +110,59 @@ ALTER TABLE wagon
 
 
 ALTER TABLE arret
-  ADD CONSTRAINT arret_ibfk_1 FOREIGN KEY (ligne_id) REFERENCES ligne (id) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT fk_arret_no_ligne FOREIGN KEY (no_ligne) REFERENCES ligne (no_ligne) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE trafic
-  ADD CONSTRAINT trafic_ibfk_1 FOREIGN KEY (ligne_id) REFERENCES ligne (id) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT trafic_ibfk_1 FOREIGN KEY (no_ligne) REFERENCES ligne (no_ligne) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE train
-  ADD CONSTRAINT train_ibfk_1 FOREIGN KEY (trafic_id) REFERENCES trafic (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT train_ibfk_2 FOREIGN KEY (wagon_id) REFERENCES wagon (id) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT fk_train_no_train FOREIGN KEY (no_train) REFERENCES trafic (no_train),
+  ADD CONSTRAINT fk_train_no_wagon FOREIGN KEY (no_wagon) REFERENCES wagon (no_wagon) ON DELETE CASCADE ON UPDATE CASCADE;
+;
 
 ```
 
 Data
 
 ```sql
-INSERT INTO ligne (id, ville_dep, ville_arr)
-VALUES
-  (NULL, 'Lyon', 'Clermont-Ferrand'),
-  (NULL, 'Lyon', 'Marseille');
 
-INSERT INTO arret
-  (ligne_id, rang, ville)
-VALUES
-  (1, 1, 'Gannat'),
-  (2, 1, 'Valence'),
-  (2, 2, 'Avignon');
+INSERT INTO `ligne` (`no_ligne`, `ville_dep`, `ville_arr`) VALUES
+(1, 'Lyon', 'Clermont-Ferrand'),
+(2, 'Lyon', 'Marseille');
 
-INSERT INTO trafic (no_train, ligne_id, no_jour)
-VALUES
-  (1,1,1),(1,1,2),(1,1,3),(1,1,4), (1,1,5),(2,2,6),(2,2,7);
+INSERT INTO `arret` (`no_ligne`, `rang`, `ville`) VALUES
+(1, 1, 'Gannat'),
+(2, 1, 'Valence'),
+(2, 2, 'Avignon');
 
-INSERT INTO wagon
-  (no_wagon, type_wagon, poids_vide, capacite, etat)
-VALUES
-  (1,'Passagers', NULL, 150, 'Libre' ),
-  (2,'Marchandise', 12345, NULL, 'Occupé'),
-  (3,'Passagers', NULL, 150, 'Libre' ),
-  (4,'Marchandise', 12345, NULL, 'Occupé'),
-  (5,'Passagers', NULL, 150, 'Libre' ),
-  (6,'Marchandise', 12345, NULL, 'Occupé'),
-  (7,'Passagers', NULL, 150, 'Libre' ),
-  (8,'Marchandise', 12345, NULL, 'Occupé'),
-  (9,'Passagers', NULL, 150, 'Libre' ),
-  (10,'Marchandise', 12345, NULL, 'Occupé');
+INSERT INTO `wagon` (`no_wagon`, `type_wagon`, `poids_vide`, `capacite`, `etat`) VALUES
+(1, 'Passagers', NULL, 150, 'Libre'),
+(2, 'Marchandise', 12345, NULL, 'Occupé'),
+(3, 'Passagers', NULL, 150, 'Libre'),
+(4, 'Marchandise', 12345, NULL, 'Occupé'),
+(5, 'Passagers', NULL, 150, 'Libre'),
+(6, 'Marchandise', 12345, NULL, 'Occupé'),
+(7, 'Passagers', NULL, 150, 'Libre'),
+(8, 'Marchandise', 12345, NULL, 'Occupé'),
+(9, 'Passagers', NULL, 150, 'Libre'),
+(10, 'Marchandise', 12345, NULL, 'Occupé');
 
-INSERT INTO train (no_train, no_wagon)
-VALUES
-  (1,1), (1,3), (1,4), (1,5), (2,9), (2,10);
+INSERT INTO `train` (`no_train`, `no_wagon`) VALUES
+(1, 1),
+(1, 3),
+(1, 4),
+(1, 5),
+(2, 9),
+(2, 10);
+
+INSERT INTO `trafic` (`no_train`, `no_ligne`, `no_jour`) VALUES
+(1, 1, 1),
+(1, 1, 2),
+(1, 1, 3),
+(1, 1, 4),
+(1, 1, 5),
+(2, 2, 6),
+(2, 2, 7);
 ```
 
 ## Donner les requêtes SQL permettant de répondre aux questions suivantes :
