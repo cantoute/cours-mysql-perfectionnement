@@ -196,8 +196,9 @@ ORDER BY rang;
 ```sql
 SELECT no_wagon
 FROM wagon
-WHERE poids_vide BETWEEN 800 AND 2000
-AND type_wagon = 'Marchandise';
+WHERE
+  poids_vide BETWEEN 800 AND 2000
+  AND type_wagon = 'Marchandise';
 ```
 
 3. Donner les wagons dont on ne connaît pas soit le poids à vide soit la capacité.
@@ -217,7 +218,8 @@ SELECT L.no_ligne
 FROM
   trafic AS T
   JOIN ligne L ON T.no_ligne = L.no_ligne
-WHERE T.no_jour=3
+WHERE
+  T.no_jour = 3
   AND L.ville_dep = 'Lyon';
 ```
 
