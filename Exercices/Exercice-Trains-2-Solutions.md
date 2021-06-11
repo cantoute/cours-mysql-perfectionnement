@@ -169,14 +169,103 @@ INSERT INTO `trafic` (`no_train`, `no_ligne`, `no_jour`) VALUES
 
 1. Donner la liste des gares traversées par la ligne 3. Le résultat sera renommé ’GareTraverseeParL3’ et sera trié selon le rang de l’arrêt.
 
+```sql
+SELECT ville AS GareTraverseeParL3
+FROM arret
+WHERE no_ligne = 3
+ORDER BY rang;
+```
+
+```sql
+-- ligne 2
+SELECT ville AS GareTraverseeParL2
+FROM arret
+WHERE no_ligne = 2
+ORDER BY rang;
+
++--------------------+
+| GareTraverseeParL2 |
++--------------------+
+| Valence            |
+| Avignon            |
++--------------------+
+```
+
 2. Donner les numéros des wagons faisant à vide entre 800kg et 2tonnes et de type ’Marchandise’.
+
+```sql
+SELECT no_wagon
+FROM wagon
+WHERE poids_vide BETWEEN 800 AND 2000
+AND type_wagon = 'Marchandise';
+```
 
 3. Donner les wagons dont on ne connaît pas soit le poids à vide soit la capacité.
 
+```sql
+SELECT no_wagon
+FROM wagon
+WHERE
+  poids_vide IS NULL
+  OR capacite IS NULL;
+```
+
 4. Donner les numéros des lignes partant de Lyon et pour lesquelles au moins un train circule le mercredi.
+
+```sql
+SELECT L.no_ligne
+FROM
+  trafic AS T
+  JOIN ligne L ON T.no_ligne = L.no_ligne
+WHERE T.no_jour=3
+  AND L.ville_dep = 'Lyon';
+```
 
 5. Donner les wagons de type ’Marchandise’ de capacité inférieure strictement à celle du wagon 12.
 
+```sql
+SELECT W1.*
+FROM
+  wagon AS W1
+  JOIN wagon W2 ON W1.capacite < W2.capacite
+WHERE
+  W1.type_wagon = 'Marchandise'
+  AND W2.no_wagon = 12;
+```
+
 6. Donner les couples de numéros de wagons qui sont libres, de même type, de même poids à vide mais de capacités différentes.
 
+```sql
+SELECT W1.no_wagon , W2.no_wagon
+FROM
+  wagon W1
+  JOIN wagon W2 ON (
+    W1.type_wagon = W2.type_wagon
+    AND W1.poids_vide = W2.poids_vide
+    AND W1.capacite < W2.capacite
+  )
+WHERE
+  W1.etat = 'libre'
+  AND W2.etat = 'libre';
+```
+
 7. Donner le numéro des trains qui sont composés d’au moins deux wagons de type ’Passagers’ et qui partent de ’Dijon’ ou arrivent à ’Valence’.
+
+```sql
+SELECT T.no_train
+FROM train T
+  JOIN wagon W1 ON T.no_wagon = W1.no_wagon
+  JOIN wagon W2 ON (
+    T.no_wagon = W2.no_wagon
+    AND W1.no_wagon != W2.no_wagon
+  )
+  JOIN trafic Tr ON Tr.no_train = T.no_train
+  JOIN ligne L ON Tr.no_ligne = L.no_ligne
+WHERE
+  W1.type_wagon = 'Passagers'
+  AND W2.type_wagon = 'Passagers'
+  AND (
+    L.ville_dep = 'Dijon'
+    OR L.ville_arr = 'Valence'
+  );
+```
