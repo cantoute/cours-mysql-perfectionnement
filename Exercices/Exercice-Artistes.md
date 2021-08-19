@@ -29,6 +29,8 @@ Trouver les `user` qui ne sont inscrit à aucun `club`.
 
 2. En utilisant `LEFT JOIN`
 
+   _Astuce : les conditions sur le user n'iront pas dans le `WHERE` mais dans les conditions du `JOIN`_
+
 3. En utilisant `CROSS JOIN`
 
 ### Question 5
