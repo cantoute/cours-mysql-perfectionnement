@@ -27,11 +27,21 @@ Trouver les `user` qui ne sont inscrit à aucun `club`.
 
 1. En utilisant `EXISTS`
 
-2. En utilisant `JOIN`
+2. En utilisant `LEFT JOIN`
+
+3. En utilisant `CROSS JOIN`
 
 ### Question 5
 
 Trouver les clubs auxquels n'est pas inscrit Bob Marley.
+
+1. En utilisant `EXISTS`
+
+2. En utilisant `IN()`
+
+3. En utilisant `LEFT JOIN`
+
+4. En utilisant `CROSS JOIN`
 
 ### Question 6
 
